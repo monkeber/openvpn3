@@ -608,4 +608,9 @@ License
 -------
 
 See `<LICENSE.rst>`_.
+
+Reasons for forking
+-------
+
+The only modified files are `.gitignore` and `openvpn/win/call.hpp` in which I have added flag to call of `CreateProcess` function to avoid creating unnecessary console windows.
  

@@ -348,6 +348,7 @@ namespace openvpn {
       std::string gw6;
       std::string clientIp;
       std::string tunName;
+      std::vector<std::string> dns_servers;
     };
 
     // returned by some methods as a status/error indication

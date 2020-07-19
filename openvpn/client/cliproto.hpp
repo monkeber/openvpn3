@@ -738,6 +738,7 @@ namespace openvpn {
 	ev->vpn_ip6 = tun->vpn_ip6();
 	ev->vpn_gw4 = tun->vpn_gw4();
 	ev->vpn_gw6 = tun->vpn_gw6();
+    ev->dns_server = get_dns_servers();
 	try {
 	  std::string client_ip = received_options.get_optional("client-ip", 1, 256);
 	  if (!client_ip.empty())
@@ -1063,7 +1064,23 @@ namespace openvpn {
 	    process_exception(e, "info_hold_callback");
 	  }
       }
-
+    std::vector<std::string> get_dns_servers()
+    {
+        std::vector<std::string> dns_servers;
+        OptionList::IndexMap::const_iterator dopt = received_options.map().find("dhcp-option"); // DIRECTIVE
+        if (dopt != received_options.map().end()) {
+            for (OptionList::IndexList::const_iterator i = dopt->second.begin(); i != dopt->second.end(); ++i) {
+                const Option &o = received_options[*i];
+                const std::string &type = o.get(1, 64);
+                if (type == "DNS") {
+                    o.exact_args(3);
+                    const IP::Addr ip = IP::Addr::from_string(o.get(2, 256), "dns-server-ip");
+                    dns_servers.push_back(ip.to_string());
+                }
+            }
+        }
+        return dns_servers;
+    }
 #ifdef OPENVPN_PACKET_LOG
       void log_packet(const Buffer& buf, const bool out)
       {

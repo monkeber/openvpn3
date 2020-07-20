@@ -305,6 +305,7 @@ namespace openvpn {
       std::string vpn_gw6;
       std::string client_ip;
       std::string tun_name;
+      std::vector<std::string> dns_server;
 
       virtual std::string render() const
       {
